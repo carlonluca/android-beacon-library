@@ -556,6 +556,7 @@ public class BeaconParser {
             beacon.mBluetoothAddress = macAddress;
             beacon.mBluetoothName= name;
             beacon.mManufacturer = manufacturer;
+            beacon.mScanRecord = bytesToProcess;
         }
         return beacon;
     }

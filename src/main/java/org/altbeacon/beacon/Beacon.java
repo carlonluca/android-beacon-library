@@ -151,6 +151,11 @@ public class Beacon implements Parcelable {
     protected String mBluetoothName;
 
     /**
+     * The scan record.
+     */
+    protected byte[] mScanRecord;
+
+    /**
      * Required for making object Parcelable.  If you override this class, you must provide an
      * equivalent version of this method.
      */
@@ -223,6 +228,15 @@ public class Beacon implements Parcelable {
         }
         mManufacturer = in.readInt();
         mBluetoothName = in.readString();
+
+        // Read the scan record if present.
+        size = in.readInt();
+        if (size == 0)
+            mScanRecord = null;
+        else {
+            mScanRecord = new byte[size];
+            in.readByteArray(mScanRecord);
+        }
     }
 
     /**
@@ -242,6 +256,7 @@ public class Beacon implements Parcelable {
         this.mBeaconTypeCode = otherBeacon.getBeaconTypeCode();
         this.mServiceUuid = otherBeacon.getServiceUuid();
         this.mBluetoothName = otherBeacon.mBluetoothName;
+        this.mScanRecord = otherBeacon.mScanRecord;
     }
 
     /**
@@ -427,6 +442,13 @@ public class Beacon implements Parcelable {
     }
 
     /**
+     * Returns the scan record if available. Otherwise null is returned.
+     */
+    public byte[] getScanRecord() {
+        return mScanRecord;
+    }
+
+    /**
      * Calculate a hashCode for this beacon
      * @return
      */
@@ -527,6 +549,13 @@ public class Beacon implements Parcelable {
         out.writeInt(mManufacturer);
         out.writeString(mBluetoothName);
 
+        // Write the scan record if not null.
+        if (mScanRecord == null)
+            out.writeInt(0);
+        else {
+            out.writeInt(mScanRecord.length);
+            out.writeByteArray(mScanRecord);
+        }
     }
 
     /**
